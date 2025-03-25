@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Convertor"
+rootProject.name = "Converter"
 include(":app")
