@@ -22,9 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private var valuesFirst = arrayOf("USD", "UAH")
-    private var valuesSecond = arrayOf("UAH", "USD")
-
+    private val valuesFirst = arrayOf("USD", "UAH")
+    private val valuesSecond = arrayOf("UAH", "USD")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,9 +69,22 @@ class MainActivity : AppCompatActivity() {
         };
 
         binding.appBarMain.convertbutton.setOnClickListener { view ->
-            val input = binding.appBarMain.input.text.toString()
-            binding.appBarMain.output.text = input
+            var input = binding.appBarMain.input.text.toString()
+            val forMath = input.toDouble()
+            val result = forMath * 2
+            binding.appBarMain.output.text = result.toString()
         }
+
+//        binding.appBarMain.convertbutton.setOnClickListener { view ->
+//            val inputText = binding.appBarMain.input.text.toString()
+//            val input = inputText.toDoubleOrNull()
+//            if (input != null) {
+//                val result = input * 2
+//                binding.appBarMain.output.text = result.toString()
+//            } else {
+//                Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
+//            }
+//        }
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
