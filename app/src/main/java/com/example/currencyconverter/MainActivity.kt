@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
     private val valuesFirst = arrayOf("USD", "UAH")
     private val valuesSecond = arrayOf("UAH", "USD")
 
@@ -47,8 +48,13 @@ class MainActivity : AppCompatActivity() {
 
         firstSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val secondSelectedItem = secondSpinner.selectedItem.toString()
                 val selectedItem = parent.getItemAtPosition(position).toString()
-                Toast.makeText(this@MainActivity, "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
+                if (selectedItem == secondSelectedItem) {
+                    Toast.makeText(this@MainActivity, "Select another currency", Toast.LENGTH_SHORT).show()
+                    firstSpinner.setSelection(0)
+                    secondSpinner.setSelection(0)
+                }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         };
@@ -57,34 +63,44 @@ class MainActivity : AppCompatActivity() {
                 val firstSelectedItem = firstSpinner.selectedItem.toString()
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 if (selectedItem == firstSelectedItem) {
-                    Toast.makeText(this@MainActivity, "NOOOO", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Select another currency", Toast.LENGTH_SHORT).show()
+                    firstSpinner.setSelection(0)
                     secondSpinner.setSelection(0)
-                }
-                else {
-                    Toast.makeText(this@MainActivity, "Selected: $selectedItem", Toast.LENGTH_SHORT)
-                        .show()
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         };
 
-        binding.appBarMain.convertbutton.setOnClickListener { view ->
-            var input = binding.appBarMain.input.text.toString()
-            val forMath = input.toDouble()
-            val result = forMath * 2
-            binding.appBarMain.output.text = result.toString()
+        binding.appBarMain.changeCurrency.setOnClickListener { view ->
+            val firstSelectedItem = firstSpinner.selectedItem.toString()
+            val secondSelectedItem = secondSpinner.selectedItem.toString()
+            firstSpinner.setSelection(valuesFirst.indexOf(secondSelectedItem))
+            secondSpinner.setSelection(valuesSecond.indexOf(firstSelectedItem))
         }
 
-//        binding.appBarMain.convertbutton.setOnClickListener { view ->
-//            val inputText = binding.appBarMain.input.text.toString()
-//            val input = inputText.toDoubleOrNull()
-//            if (input != null) {
-//                val result = input * 2
-//                binding.appBarMain.output.text = result.toString()
-//            } else {
-//                Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
-//            }
-//        }
+        binding.appBarMain.convertbutton.setOnClickListener { view ->
+            var input = binding.appBarMain.input.text.toString()
+            val forMath = input.toDoubleOrNull()
+            if (forMath != null) {
+                when (firstSpinner.selectedItem.toString()) {
+                    "USD" -> {
+                        if (secondSpinner.selectedItem.toString() == "UAH") {
+                            val result = forMath * 40
+                            binding.appBarMain.output.text = result.toString()
+                        }
+                    }
+                    "UAH" -> {
+                        if (secondSpinner.selectedItem.toString() == "USD") {
+                            val result = forMath / 40
+                            binding.appBarMain.output.text = result.toString()
+                        }
+                    }
+                }
+            }
+            else {
+                Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView

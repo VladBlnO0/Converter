@@ -85,17 +85,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/output"
-        android:layout_width="0dp"
-        android:layout_height="95dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/switch3"
-        app:layout_constraintVertical_bias="0.254" />
+        <TextView
+            android:id="@+id/output"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline10"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline9"
+            app:layout_constraintTop_toBottomOf="@+id/changeCurrency"
+            app:layout_constraintVertical_bias="0.254" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout2"
@@ -109,12 +111,15 @@
                 android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint"
-                android:inputType="number|numberDecimal" />
+                android:background="#DEE6DE"
+                android:hint="Input your sum"
+                android:inputType="number|numberDecimal"
+                android:maxEms="10"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/switch3"
+            android:id="@+id/changeCurrency"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="44dp"
@@ -134,7 +139,7 @@
         android:layout_marginBottom="584dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/switch3"
+        app:layout_constraintEnd_toStartOf="@+id/changeCurrency"
         app:layout_constraintHorizontal_bias="0.298"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
@@ -145,18 +150,18 @@
         android:id="@+id/secondCurrency"
         android:layout_width="115dp"
         android:layout_height="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/switch3"
+        app:layout_constraintBottom_toBottomOf="@+id/changeCurrency"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/switch3"
-        app:layout_constraintTop_toTopOf="@+id/switch3"
+        app:layout_constraintStart_toEndOf="@+id/changeCurrency"
+        app:layout_constraintTop_toTopOf="@+id/changeCurrency"
         app:layout_constraintVertical_bias="0.0" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="switch3,firstCurrency,secondCurrency" />
+            app:constraint_referenced_ids="changeCurrency,firstCurrency,secondCurrency" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
