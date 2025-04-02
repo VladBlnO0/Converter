@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    //Values for spinner
     private val valuesFirst = arrayOf("USD", "UAH")
     private val valuesSecond = arrayOf("UAH", "USD")
 
@@ -34,18 +35,21 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        val firstSpinner: Spinner = binding.appBarMain.firstCurrency;
-        val secondSpinner: Spinner = binding.appBarMain.secondCurrency;
+        val firstSpinner: Spinner = binding.appBarMain.firstCurrency
+        val secondSpinner: Spinner = binding.appBarMain.secondCurrency
 
+        //First spinner getting values
         val adapterFirst = ArrayAdapter(this, android.R.layout.simple_spinner_item, valuesFirst)
         adapterFirst.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
+        //Second spinner getting values
         val adapterSecond = ArrayAdapter(this, android.R.layout.simple_spinner_item, valuesSecond)
         adapterSecond.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         firstSpinner.adapter = adapterFirst
         secondSpinner.adapter = adapterSecond
 
+        //First spinner
         firstSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val secondSelectedItem = secondSpinner.selectedItem.toString()
@@ -57,7 +61,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
-        };
+        }
+
+        //Second spinner
         secondSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val firstSelectedItem = firstSpinner.selectedItem.toString()
@@ -69,8 +75,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
-        };
+        }
 
+        //Get data from spinners
         binding.appBarMain.changeCurrency.setOnClickListener { view ->
             val firstSelectedItem = firstSpinner.selectedItem.toString()
             val secondSelectedItem = secondSpinner.selectedItem.toString()
@@ -78,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             secondSpinner.setSelection(valuesSecond.indexOf(firstSelectedItem))
         }
 
+        //Converting
         binding.appBarMain.convertbutton.setOnClickListener { view ->
             var input = binding.appBarMain.input.text.toString()
             val forMath = input.toDoubleOrNull()
