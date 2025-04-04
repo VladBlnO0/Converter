@@ -91,6 +91,8 @@
             android:layout_height="42dp"
             android:autoText="false"
             android:gravity="center"
+            android:inputType="number|numberDecimal"
+            android:maxLength="14"
             android:textAlignment="gravity"
             android:textColor="@color/black"
             android:textSize="34sp"
@@ -118,6 +120,7 @@
                 android:hint="Input your sum"
                 android:inputType="number|numberDecimal"
                 android:maxEms="10"
+                android:maxLength="10"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 

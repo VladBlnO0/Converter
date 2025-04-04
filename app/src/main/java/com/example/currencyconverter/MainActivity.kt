@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     //Values for spinner
-    private val valuesFirst = arrayOf("USD", "UAH")
-    private val valuesSecond = arrayOf("UAH", "USD")
+    private val valuesFirst = arrayOf("USD", "UAH", "EUR")
+    private val valuesSecond = arrayOf("UAH", "USD", "EUR")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        //Get data from spinners
+        //Change spinners
         binding.appBarMain.changeCurrency.setOnClickListener { view ->
             val firstSelectedItem = firstSpinner.selectedItem.toString()
             val secondSelectedItem = secondSpinner.selectedItem.toString()
@@ -91,16 +91,34 @@ class MainActivity : AppCompatActivity() {
             val forMath = input.toDoubleOrNull()
             if (forMath != null) {
                 when (firstSpinner.selectedItem.toString()) {
-                    "USD" -> {
+                    "USD" -> {1
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val result = forMath * 40
-                            binding.appBarMain.output.text = result.toString()
+                            val result = forMath.toDouble() * 40.95
+                            binding.appBarMain.output.text = String.format("%.2f", result)
+                        }
+                        if (secondSpinner.selectedItem.toString() == "EUR") {
+                            val result = forMath.toDouble() * 1.1
+                            binding.appBarMain.output.text = String.format("%.2f", result)
                         }
                     }
                     "UAH" -> {
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            val result = forMath / 40
-                            binding.appBarMain.output.text = result.toString()
+                            val result = forMath.toDouble() * 0.02
+                            binding.appBarMain.output.text = String.format("%.2f", result)
+                        }
+                        if (secondSpinner.selectedItem.toString() == "EUR") {
+                            val result = forMath.toDouble() * 0.02
+                            binding.appBarMain.output.text = String.format("%.2f", result)
+                        }
+                    }
+                    "EUR" -> {
+                        if (secondSpinner.selectedItem.toString() == "UAH") {
+                            val result = forMath.toDouble() * 45.26
+                            binding.appBarMain.output.text = String.format("%.2f", result)
+                        }
+                        if (secondSpinner.selectedItem.toString() == "USD") {
+                            val result = forMath.toDouble() * 1.1
+                            binding.appBarMain.output.text = String.format("%.2f", result)
                         }
                     }
                 }
