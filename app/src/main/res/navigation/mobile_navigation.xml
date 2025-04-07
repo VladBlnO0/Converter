@@ -6,10 +6,16 @@
     app:startDestination="@+id/nav_home">
 
     <fragment
+        android:id="@+id/nav_hist"
+        android:name="com.example.currencyconverter.ui.history.HistoryFragment"
+        android:label="@string/menu_hist" />
+
+    <fragment
         android:id="@+id/nav_home"
         android:name="com.example.currencyconverter.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_faq"
