@@ -1,5 +1,6 @@
 package com.example.currencyconverter
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -218,6 +219,13 @@ class MainActivity : AppCompatActivity() {
                 // Optional
             }
         })
+
+        //New activity
+        binding.appBarMain.save.setOnClickListener { view ->
+            val intent = Intent(this, SaveActivity::class.java)
+            startActivity(intent)
+            // TODO: add here saving of converting
+        }
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
