@@ -17,6 +17,9 @@ import com.example.currencyconverter.databinding.ActivityMainBinding
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import java.util.Locale
+import android.text.Editable
+import android.text.TextWatcher
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +27,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     //Values for spinner
+    private val currency = mapOf<String, Double>(
+    "USD" to 1.0,
+    "UAH" to 40.81,
+    "EUR" to 0.91
+    )
+
     private val valuesFirst = arrayOf("USD", "UAH", "EUR")
     private val valuesSecond = arrayOf("UAH", "USD", "EUR")
 
@@ -83,50 +92,132 @@ class MainActivity : AppCompatActivity() {
             val secondSelectedItem = secondSpinner.selectedItem.toString()
             firstSpinner.setSelection(valuesFirst.indexOf(secondSelectedItem))
             secondSpinner.setSelection(valuesSecond.indexOf(firstSelectedItem))
-        }
 
-        //Converting
-        binding.appBarMain.convertbutton.setOnClickListener { view ->
-            var input = binding.appBarMain.input.text.toString()
-            val forMath = input.toDoubleOrNull()
-            if (forMath != null) {
+            val input = binding.appBarMain.input.text.toString().toDoubleOrNull()
+
+            if (input != null) {
                 when (firstSpinner.selectedItem.toString()) {
-                    "USD" -> {1
+                    "USD" -> {
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val result = forMath.toDouble() * 40.95
-                            binding.appBarMain.output.text = String.format("%.2f", result)
+                            binding.appBarMain.output.text = String.format(
+                                Locale.getDefault(),
+                                "%.3f",
+                                convertC(input, "USD", "UAH")
+                            ).trimEnd('0').trimEnd('.')
                         }
                         if (secondSpinner.selectedItem.toString() == "EUR") {
-                            val result = forMath.toDouble() * 1.1
-                            binding.appBarMain.output.text = String.format("%.2f", result)
+                            binding.appBarMain.output.text = String.format(
+                                Locale.getDefault(),
+                                "%.3f",
+                                convertC(input, "USD", "EUR")
+                            ).trimEnd('0').trimEnd('.')
                         }
                     }
+
                     "UAH" -> {
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            val result = forMath.toDouble() * 0.02
-                            binding.appBarMain.output.text = String.format("%.2f", result)
+                            binding.appBarMain.output.text = String.format(
+                                Locale.getDefault(),
+                                "%.3f",
+                                convertC(input, "UAH", "USD")
+                            ).trimEnd('0').trimEnd('.')
                         }
                         if (secondSpinner.selectedItem.toString() == "EUR") {
-                            val result = forMath.toDouble() * 0.02
-                            binding.appBarMain.output.text = String.format("%.2f", result)
+                            binding.appBarMain.output.text = String.format(
+                                Locale.getDefault(),
+                                "%.3f",
+                                convertC(input, "UAH", "EUR")
+                            ).trimEnd('0').trimEnd('.')
                         }
                     }
+
                     "EUR" -> {
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val result = forMath.toDouble() * 45.26
-                            binding.appBarMain.output.text = String.format("%.2f", result)
+                            binding.appBarMain.output.text = String.format(
+                                Locale.getDefault(),
+                                "%.3f",
+                                convertC(input, "EUR", "UAH")
+                            ).trimEnd('0').trimEnd('.')
                         }
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            val result = forMath.toDouble() * 1.1
-                            binding.appBarMain.output.text = String.format("%.2f", result)
+                            binding.appBarMain.output.text = String.format(
+                                Locale.getDefault(),
+                                "%.3f",
+                                convertC(input, "EUR", "USD")
+                            ).trimEnd('0').trimEnd('.')
                         }
                     }
                 }
             }
-            else {
-                Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
-            }
         }
+
+        //Converting
+        binding.appBarMain.input.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                binding.appBarMain.output.text = String.format(Locale.getDefault(),"Input your sum")
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val input = binding.appBarMain.input.text.toString().toDoubleOrNull()
+
+                if (input != null) {
+                    when (firstSpinner.selectedItem.toString()) {
+                        "USD" -> {
+                            if (secondSpinner.selectedItem.toString() == "UAH") {
+                                binding.appBarMain.output.text = String.format(
+                                    Locale.getDefault(),
+                                    "%.3f",
+                                    convertC(input, "USD", "UAH")
+                                ).trimEnd('0').trimEnd('.')
+                            }
+                            if (secondSpinner.selectedItem.toString() == "EUR") {
+                                binding.appBarMain.output.text = String.format(
+                                    Locale.getDefault(),
+                                    "%.3f",
+                                    convertC(input, "USD", "EUR")
+                                ).trimEnd('0').trimEnd('.')
+                            }
+                        }
+
+                        "UAH" -> {
+                            if (secondSpinner.selectedItem.toString() == "USD") {
+                                binding.appBarMain.output.text = String.format(
+                                    Locale.getDefault(),
+                                    "%.3f",
+                                    convertC(input, "UAH", "USD")
+                                ).trimEnd('0').trimEnd('.')
+                            }
+                            if (secondSpinner.selectedItem.toString() == "EUR") {
+                                binding.appBarMain.output.text = String.format(
+                                    Locale.getDefault(),
+                                    "%.3f",
+                                    convertC(input, "UAH", "EUR")
+                                ).trimEnd('0').trimEnd('.')
+                            }
+                        }
+
+                        "EUR" -> {
+                            if (secondSpinner.selectedItem.toString() == "UAH") {
+                                binding.appBarMain.output.text = String.format(
+                                    Locale.getDefault(),
+                                    "%.3f",
+                                    convertC(input, "EUR", "UAH")
+                                ).trimEnd('0').trimEnd('.')
+                            }
+                            if (secondSpinner.selectedItem.toString() == "USD") {
+                                binding.appBarMain.output.text = String.format(
+                                    Locale.getDefault(),
+                                    "%.3f",
+                                    convertC(input, "EUR", "USD")
+                                ).trimEnd('0').trimEnd('.')
+                            }
+                        }
+                    }
+                }
+            }
+            override fun afterTextChanged(s: Editable?) {
+                // Optional
+            }
+        })
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -140,6 +231,12 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+    fun convertC(amount: Double, from: String, to: String): Double {
+        val fromRate = currency[from]!!
+        val toRate = currency[to]!!
+
+        return amount / fromRate * toRate
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
