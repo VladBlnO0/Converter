@@ -1,6 +1,5 @@
 package com.example.currencyconverter.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,8 @@ import com.example.currencyconverter.databinding.FragmentHomeBinding
 import java.util.Locale
 import android.text.Editable
 import android.text.TextWatcher
+import com.example.currencyconverter.ui.history.HistoryRecycler
+import com.example.currencyconverter.ui.history.HistoryViewModel
 
 class HomeFragment : Fragment() {
 
@@ -223,12 +224,13 @@ class HomeFragment : Fragment() {
             }
         })
 
-//        // New activity
-//        binding.save2.setOnClickListener {
-//            val intent = Intent(requireContext(), SaveActivity::class.java)
-//            startActivity(intent)
-//            // TODO: add here saving of converting
-//        }
+        // New activity
+        binding.save2.setOnClickListener {
+            val historyViewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
+            val resultModel = HistoryRecycler("USD to UAH", 123.45)
+            historyViewModel.addHistory(resultModel)
+
+        }
     }
 
     private fun convertC(amount: Double, from: String, to: String): Double {

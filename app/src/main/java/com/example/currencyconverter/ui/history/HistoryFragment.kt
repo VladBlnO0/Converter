@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.currencyconverter.databinding.FragmentFaqBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyconverter.databinding.FragmentHistBinding
-import com.example.currencyconverter.ui.history.HistoryViewModel
 
 class HistoryFragment : Fragment() {
 
@@ -24,16 +22,24 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val faqViewModel =
+        val histViewModel =
             ViewModelProvider(this).get(HistoryViewModel::class.java)
 
         _binding = FragmentHistBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHist
-        faqViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+
+
+        val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
+
+        viewModel.historyList.observe(viewLifecycleOwner) { history ->
+            val adapter = HistoryAdapter(history)
+            binding.historyRecyclerView.adapter = adapter
+            binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+
+
+
         return root
     }
 
