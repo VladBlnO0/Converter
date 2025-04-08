@@ -6,15 +6,10 @@ import androidx.lifecycle.ViewModel
 
 class HistoryViewModel : ViewModel() {
 
-    data class HistoryViewModel(
-        val currencyText: String,
-        val valueText: Double
-    )
+    private val _historyList = MutableLiveData<MutableList<HistoryModel>>(mutableListOf())
+    val historyList: LiveData<MutableList<HistoryModel>> get() = _historyList
 
-    private val _historyList = MutableLiveData<MutableList<HistoryRecycler>>(mutableListOf())
-    val historyList: LiveData<MutableList<HistoryRecycler>> get() = _historyList
-
-    fun addHistory(item: HistoryRecycler) {
+    fun addHistory(item: HistoryModel) {
         val currentList = _historyList.value ?: mutableListOf()
         currentList.add(item)
         _historyList.value = currentList

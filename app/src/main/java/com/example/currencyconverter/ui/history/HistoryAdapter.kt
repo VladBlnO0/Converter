@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyconverter.R
 
-class HistoryAdapter(private val items: MutableList<HistoryRecycler>?) :
+class HistoryAdapter(private val items: List<HistoryModel>) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,10 +22,11 @@ class HistoryAdapter(private val items: MutableList<HistoryRecycler>?) :
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val item = items?.get(position)
-        holder.currencyTextView.text = item?.currencyText
-        holder.valueTextView.text = item?.valueText.toString()
+        val item = items[position]
+        holder.currencyTextView.text = item.currencyText
+        holder.valueTextView.text = item.valueText
     }
 
-    override fun getItemCount(): Int = items?.size ?: 0
-    }
+    override fun getItemCount(): Int = items.size
+}
+

@@ -10,7 +10,7 @@
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_hist"
-            android:icon="@drawable/question"
+            android:icon="@drawable/baseline_attach_money_24"
             android:title="@string/menu_hist" />
         <item
             android:id="@+id/nav_faq"

@@ -14,7 +14,7 @@ import com.example.currencyconverter.databinding.FragmentHomeBinding
 import java.util.Locale
 import android.text.Editable
 import android.text.TextWatcher
-import com.example.currencyconverter.ui.history.HistoryRecycler
+import com.example.currencyconverter.ui.history.HistoryModel
 import com.example.currencyconverter.ui.history.HistoryViewModel
 
 class HomeFragment : Fragment() {
@@ -98,58 +98,48 @@ class HomeFragment : Fragment() {
             firstSpinner.setSelection(valuesFirst.indexOf(secondSelectedItem))
             secondSpinner.setSelection(valuesSecond.indexOf(firstSelectedItem))
 
-            val input = binding.input.text.toString().toDoubleOrNull()
-
-            if (input != null) {
+            if (binding.input.text.toString().toDoubleOrNull() != null) {
                 when (firstSpinner.selectedItem.toString()) {
                     "USD" -> {
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            binding.output2.text = String.format(
-                                Locale.getDefault(),
-                                "%.3f",
-                                convertC(input, "USD", "UAH")
-                            ).trimEnd('0').trimEnd('.')
+                            binding.output2.text = convertIFELSE(
+                                binding.input.text.toString().toDouble(),
+                                "USD",
+                                "UAH")
                         }
                         if (secondSpinner.selectedItem.toString() == "EUR") {
-                            binding.output2.text = String.format(
-                                Locale.getDefault(),
-                                "%.3f",
-                                convertC(input, "USD", "EUR")
-                            ).trimEnd('0').trimEnd('.')
+                            binding.output2.text = convertIFELSE(
+                                binding.input.text.toString().toDouble(),
+                                "USD",
+                                "EUR")
                         }
                     }
-
                     "UAH" -> {
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            binding.output2.text = String.format(
-                                Locale.getDefault(),
-                                "%.3f",
-                                convertC(input, "UAH", "USD")
-                            ).trimEnd('0').trimEnd('.')
+                            binding.output2.text = convertIFELSE(
+                                binding.input.text.toString().toDouble(),
+                                "UAH",
+                                "USD")
                         }
                         if (secondSpinner.selectedItem.toString() == "EUR") {
-                            binding.output2.text = String.format(
-                                Locale.getDefault(),
-                                "%.3f",
-                                convertC(input, "UAH", "EUR")
-                            ).trimEnd('0').trimEnd('.')
+                            binding.output2.text = convertIFELSE(
+                                binding.input.text.toString().toDouble(),
+                                "UAH",
+                                "EUR")
                         }
                     }
-
                     "EUR" -> {
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            binding.output2.text = String.format(
-                                Locale.getDefault(),
-                                "%.3f",
-                                convertC(input, "EUR", "UAH")
-                            ).trimEnd('0').trimEnd('.')
+                            binding.output2.text = convertIFELSE(
+                                binding.input.text.toString().toDouble(),
+                                "EUR",
+                                "UAH")
                         }
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            binding.output2.text = String.format(
-                                Locale.getDefault(),
-                                "%.3f",
-                                convertC(input, "EUR", "USD")
-                            ).trimEnd('0').trimEnd('.')
+                            binding.output2.text = convertIFELSE(
+                                binding.input.text.toString().toDouble(),
+                                "EUR",
+                                "USD")
                         }
                     }
                 }
@@ -162,58 +152,49 @@ class HomeFragment : Fragment() {
                 binding.output2.text = String.format(Locale.getDefault(), "Input your sum")
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val input = binding.input.text.toString().toDoubleOrNull()
 
-                if (input != null) {
+                if (binding.input.text.toString().toDoubleOrNull() != null) {
                     when (firstSpinner.selectedItem.toString()) {
                         "USD" -> {
                             if (secondSpinner.selectedItem.toString() == "UAH") {
-                                binding.output2.text = String.format(
-                                    Locale.getDefault(),
-                                    "%.3f",
-                                    convertC(input, "USD", "UAH")
-                                ).trimEnd('0').trimEnd('.')
+                                binding.output2.text = convertIFELSE(
+                                    binding.input.text.toString().toDouble(),
+                                    "USD",
+                                    "UAH")
                             }
                             if (secondSpinner.selectedItem.toString() == "EUR") {
-                                binding.output2.text = String.format(
-                                    Locale.getDefault(),
-                                    "%.3f",
-                                    convertC(input, "USD", "EUR")
-                                ).trimEnd('0').trimEnd('.')
+                                binding.output2.text = convertIFELSE(
+                                    binding.input.text.toString().toDouble(),
+                                    "USD",
+                                    "EUR")
                             }
                         }
-
                         "UAH" -> {
                             if (secondSpinner.selectedItem.toString() == "USD") {
-                                binding.output2.text = String.format(
-                                    Locale.getDefault(),
-                                    "%.3f",
-                                    convertC(input, "UAH", "USD")
-                                ).trimEnd('0').trimEnd('.')
+                                binding.output2.text = convertIFELSE(
+                                    binding.input.text.toString().toDouble(),
+                                    "UAH",
+                                    "USD")
                             }
                             if (secondSpinner.selectedItem.toString() == "EUR") {
-                                binding.output2.text = String.format(
-                                    Locale.getDefault(),
-                                    "%.3f",
-                                    convertC(input, "UAH", "EUR")
-                                ).trimEnd('0').trimEnd('.')
+                                binding.output2.text = convertIFELSE(
+                                    binding.input.text.toString().toDouble(),
+                                    "UAH",
+                                    "EUR")
                             }
                         }
-
                         "EUR" -> {
                             if (secondSpinner.selectedItem.toString() == "UAH") {
-                                binding.output2.text = String.format(
-                                    Locale.getDefault(),
-                                    "%.3f",
-                                    convertC(input, "EUR", "UAH")
-                                ).trimEnd('0').trimEnd('.')
+                                binding.output2.text = convertIFELSE(
+                                    binding.input.text.toString().toDouble(),
+                                    "EUR",
+                                    "UAH")
                             }
                             if (secondSpinner.selectedItem.toString() == "USD") {
-                                binding.output2.text = String.format(
-                                    Locale.getDefault(),
-                                    "%.3f",
-                                    convertC(input, "EUR", "USD")
-                                ).trimEnd('0').trimEnd('.')
+                                binding.output2.text = convertIFELSE(
+                                    binding.input.text.toString().toDouble(),
+                                    "EUR",
+                                    "USD")
                             }
                         }
                     }
@@ -224,12 +205,48 @@ class HomeFragment : Fragment() {
             }
         })
 
+
         // New activity
         binding.save2.setOnClickListener {
-            val historyViewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
-            val resultModel = HistoryRecycler("USD to UAH", 123.45)
-            historyViewModel.addHistory(resultModel)
+            val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
 
+            if (binding.input.text.toString().toDoubleOrNull() != null && binding.input.text.toString().toDoubleOrNull() != 0.0) {
+                when (firstSpinner.selectedItem.toString()) {
+                    "USD" -> {
+                        if (secondSpinner.selectedItem.toString() == "UAH") {
+                            val resultModel = HistoryModel("USD to UAH", convertIFELSE(binding.input.text.toString().toDouble(), "USD", "UAH"))
+                            viewModel.addHistory(resultModel)
+                        }
+                        if (secondSpinner.selectedItem.toString() == "EUR") {
+                            val resultModel = HistoryModel("USD to EUR", convertIFELSE(binding.input.text.toString().toDouble(), "USD", "EUR"))
+                            viewModel.addHistory(resultModel)
+                        }
+                    }
+                    "UAH" -> {
+                        if (secondSpinner.selectedItem.toString() == "USD") {
+                            val resultModel = HistoryModel("UAH to USD", convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "USD"))
+                            viewModel.addHistory(resultModel)
+                        }
+                        if (secondSpinner.selectedItem.toString() == "EUR") {
+                            val resultModel = HistoryModel("UAH to EUR", convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "EUR"))
+                            viewModel.addHistory(resultModel)
+                        }
+                    }
+                    "EUR" -> {
+                        if (secondSpinner.selectedItem.toString() == "UAH") {
+                            val resultModel = HistoryModel("EUR to UAH", convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "UAH"))
+                            viewModel.addHistory(resultModel)
+                        }
+                        if (secondSpinner.selectedItem.toString() == "USD") {
+                            val resultModel = HistoryModel("EUR to USD", convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "USD"))
+                            viewModel.addHistory(resultModel)
+                        }
+                    }
+                }
+            }
+            else {
+                Toast.makeText(requireContext(), "Try to write something!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -238,6 +255,20 @@ class HomeFragment : Fragment() {
         val toRate = currency[to]!!
 
         return amount / fromRate * toRate
+    }
+
+    private fun convertIFELSE(
+        input: Double,
+        fromCurrency: String,
+        toCurrency: String
+    ): String {
+        return String.format(Locale.getDefault(),
+            "%.3f",
+            convertC(
+            input,
+            fromCurrency,
+            toCurrency))
+            .trimEnd('0').trimEnd('.')
     }
 
     override fun onDestroyView() {

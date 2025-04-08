@@ -32,12 +32,11 @@ class HistoryFragment : Fragment() {
 
         val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
 
-        viewModel.historyList.observe(viewLifecycleOwner) { history ->
-            val adapter = HistoryAdapter(history)
+        viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
+            val adapter = HistoryAdapter(historyList)
             binding.historyRecyclerView.adapter = adapter
             binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
-
 
 
         return root
