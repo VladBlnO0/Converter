@@ -32,14 +32,12 @@ class HistoryFragment : Fragment() {
         viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
             val adapter = HistoryAdapter(historyList)
             adapter.onReturnClicked = { item ->
-                viewModel.selectItem(item)  // stores the selected item
-                findNavController().navigateUp() // navigates back to HomeFragment
+                viewModel.selectItem(item)
+                findNavController().navigateUp()
             }
 
             binding.historyRecyclerView.adapter = adapter
             binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            binding.historyRecyclerView.adapter = adapter
-
         }
 
 

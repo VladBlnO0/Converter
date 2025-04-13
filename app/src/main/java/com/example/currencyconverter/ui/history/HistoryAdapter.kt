@@ -32,7 +32,6 @@ class HistoryAdapter(private val items: List<HistoryModel>) :
         holder.convertedValueView.text = item.convertedValueText
 
         holder.itemView.findViewById<Button>(R.id.return_btn).setOnClickListener {
-            // You can handle navigation or callback here
             onReturnClicked?.invoke(item)
         }
     }
