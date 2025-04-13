@@ -22,20 +22,23 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val histViewModel =
-            ViewModelProvider(this).get(HistoryViewModel::class.java)
 
         _binding = FragmentHistBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-
 
         val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
 
         viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
             val adapter = HistoryAdapter(historyList)
+            adapter.onReturnClicked = { item ->
+                // Do something with the clicked item
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
             binding.historyRecyclerView.adapter = adapter
             binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            binding.historyRecyclerView.adapter = adapter
+
         }
 
 

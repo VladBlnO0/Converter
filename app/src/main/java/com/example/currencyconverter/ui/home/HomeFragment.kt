@@ -37,8 +37,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -214,31 +212,49 @@ class HomeFragment : Fragment() {
                 when (firstSpinner.selectedItem.toString()) {
                     "USD" -> {
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val resultModel = HistoryModel("USD to UAH", originalData(binding.input.text.toString().toDouble()) + " -> " + convertIFELSE(binding.input.text.toString().toDouble(), "USD", "UAH"))
+                            val resultModel = HistoryModel("USD to UAH",
+                                originalData(binding.input.text.toString().toDouble()),
+                                convertIFELSE(binding.input.text.toString().toDouble(), "USD", "UAH")
+                            )
                             viewModel.addHistory(resultModel)
                         }
                         if (secondSpinner.selectedItem.toString() == "EUR") {
-                            val resultModel = HistoryModel("USD to EUR", originalData(binding.input.text.toString().toDouble()) + " -> " + convertIFELSE(binding.input.text.toString().toDouble(), "USD", "EUR"))
+                            val resultModel = HistoryModel("USD to EUR",
+                                originalData(binding.input.text.toString().toDouble()),
+                                convertIFELSE(binding.input.text.toString().toDouble(), "USD", "EUR")
+                            )
                             viewModel.addHistory(resultModel)
                         }
                     }
                     "UAH" -> {
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            val resultModel = HistoryModel("UAH to USD", originalData(binding.input.text.toString().toDouble()) + " -> " + convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "USD"))
+                            val resultModel = HistoryModel("UAH to USD",
+                                originalData(binding.input.text.toString().toDouble()),
+                                convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "USD")
+                            )
                             viewModel.addHistory(resultModel)
                         }
                         if (secondSpinner.selectedItem.toString() == "EUR") {
-                            val resultModel = HistoryModel("UAH to EUR", originalData(binding.input.text.toString().toDouble()) + " -> " + convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "EUR"))
+                            val resultModel = HistoryModel("UAH to EUR",
+                                originalData(binding.input.text.toString().toDouble()),
+                                convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "EUR")
+                            )
                             viewModel.addHistory(resultModel)
                         }
                     }
                     "EUR" -> {
                         if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val resultModel = HistoryModel("EUR to UAH", originalData(binding.input.text.toString().toDouble()) + " -> " + convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "UAH"))
+                            val resultModel = HistoryModel("EUR to UAH",
+                                originalData(binding.input.text.toString().toDouble()),
+                                convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "UAH")
+                            )
                             viewModel.addHistory(resultModel)
                         }
                         if (secondSpinner.selectedItem.toString() == "USD") {
-                            val resultModel = HistoryModel("EUR to USD", originalData(binding.input.text.toString().toDouble()) + " -> " + convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "USD"))
+                            val resultModel = HistoryModel("EUR to USD",
+                                originalData(binding.input.text.toString().toDouble()),
+                                convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "USD"),
+                            )
                             viewModel.addHistory(resultModel)
                         }
                     }

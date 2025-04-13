@@ -2,5 +2,6 @@ package com.example.currencyconverter.ui.history
 
 data class HistoryModel (
         val currencyText: String,
-        val valueText: String
+        val valueText: String,
+        val convertedValueText: String
 )
