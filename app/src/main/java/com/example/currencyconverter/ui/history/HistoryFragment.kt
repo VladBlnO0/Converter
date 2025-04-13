@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyconverter.databinding.FragmentHistBinding
 
@@ -31,8 +32,8 @@ class HistoryFragment : Fragment() {
         viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
             val adapter = HistoryAdapter(historyList)
             adapter.onReturnClicked = { item ->
-                // Do something with the clicked item
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                viewModel.selectItem(item)  // stores the selected item
+                findNavController().navigateUp() // navigates back to HomeFragment
             }
 
             binding.historyRecyclerView.adapter = adapter

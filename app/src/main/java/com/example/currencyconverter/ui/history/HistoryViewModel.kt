@@ -9,6 +9,11 @@ class HistoryViewModel : ViewModel() {
     private val _historyList = MutableLiveData<MutableList<HistoryModel>>(mutableListOf())
     val historyList: LiveData<MutableList<HistoryModel>> get() = _historyList
 
+    val selectedItem = MutableLiveData<HistoryModel?>()
+    fun selectItem(item: HistoryModel?) {
+        selectedItem.value = item
+    }
+
     fun addHistory(item: HistoryModel) {
         val currentList = _historyList.value ?: mutableListOf()
         currentList.add(item)

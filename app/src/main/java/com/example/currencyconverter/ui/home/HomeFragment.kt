@@ -37,6 +37,16 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
+        viewModel.selectedItem.observe(viewLifecycleOwner) { item ->
+            if (item != null) {
+                binding.input.setText(item.valueText.toString())
+                // Optionally set spinners if needed
+
+
+                viewModel.selectItem(null)
+            }
+        }
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -71,6 +81,7 @@ class HomeFragment : Fragment() {
                     firstSpinner.setSelection(0)
                     secondSpinner.setSelection(0)
                 }
+                binding.output2.text = convert()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -85,6 +96,7 @@ class HomeFragment : Fragment() {
                     firstSpinner.setSelection(0)
                     secondSpinner.setSelection(0)
                 }
+                binding.output2.text = convert()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -95,53 +107,7 @@ class HomeFragment : Fragment() {
             val secondSelectedItem = secondSpinner.selectedItem.toString()
             firstSpinner.setSelection(valuesFirst.indexOf(secondSelectedItem))
             secondSpinner.setSelection(valuesSecond.indexOf(firstSelectedItem))
-
-            if (binding.input.text.toString().toDoubleOrNull() != null) {
-                when (firstSpinner.selectedItem.toString()) {
-                    "USD" -> {
-                        if (secondSpinner.selectedItem.toString() == "UAH") {
-                            binding.output2.text = convertIFELSE(
-                                binding.input.text.toString().toDouble(),
-                                "USD",
-                                "UAH")
-                        }
-                        if (secondSpinner.selectedItem.toString() == "EUR") {
-                            binding.output2.text = convertIFELSE(
-                                binding.input.text.toString().toDouble(),
-                                "USD",
-                                "EUR")
-                        }
-                    }
-                    "UAH" -> {
-                        if (secondSpinner.selectedItem.toString() == "USD") {
-                            binding.output2.text = convertIFELSE(
-                                binding.input.text.toString().toDouble(),
-                                "UAH",
-                                "USD")
-                        }
-                        if (secondSpinner.selectedItem.toString() == "EUR") {
-                            binding.output2.text = convertIFELSE(
-                                binding.input.text.toString().toDouble(),
-                                "UAH",
-                                "EUR")
-                        }
-                    }
-                    "EUR" -> {
-                        if (secondSpinner.selectedItem.toString() == "UAH") {
-                            binding.output2.text = convertIFELSE(
-                                binding.input.text.toString().toDouble(),
-                                "EUR",
-                                "UAH")
-                        }
-                        if (secondSpinner.selectedItem.toString() == "USD") {
-                            binding.output2.text = convertIFELSE(
-                                binding.input.text.toString().toDouble(),
-                                "EUR",
-                                "USD")
-                        }
-                    }
-                }
-            }
+            binding.output2.text = convert()
         }
 
         // Converting
@@ -150,53 +116,7 @@ class HomeFragment : Fragment() {
                 binding.output2.text = String.format(Locale.getDefault(), "Input your sum")
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-                if (binding.input.text.toString().toDoubleOrNull() != null) {
-                    when (firstSpinner.selectedItem.toString()) {
-                        "USD" -> {
-                            if (secondSpinner.selectedItem.toString() == "UAH") {
-                                binding.output2.text = convertIFELSE(
-                                    binding.input.text.toString().toDouble(),
-                                    "USD",
-                                    "UAH")
-                            }
-                            if (secondSpinner.selectedItem.toString() == "EUR") {
-                                binding.output2.text = convertIFELSE(
-                                    binding.input.text.toString().toDouble(),
-                                    "USD",
-                                    "EUR")
-                            }
-                        }
-                        "UAH" -> {
-                            if (secondSpinner.selectedItem.toString() == "USD") {
-                                binding.output2.text = convertIFELSE(
-                                    binding.input.text.toString().toDouble(),
-                                    "UAH",
-                                    "USD")
-                            }
-                            if (secondSpinner.selectedItem.toString() == "EUR") {
-                                binding.output2.text = convertIFELSE(
-                                    binding.input.text.toString().toDouble(),
-                                    "UAH",
-                                    "EUR")
-                            }
-                        }
-                        "EUR" -> {
-                            if (secondSpinner.selectedItem.toString() == "UAH") {
-                                binding.output2.text = convertIFELSE(
-                                    binding.input.text.toString().toDouble(),
-                                    "EUR",
-                                    "UAH")
-                            }
-                            if (secondSpinner.selectedItem.toString() == "USD") {
-                                binding.output2.text = convertIFELSE(
-                                    binding.input.text.toString().toDouble(),
-                                    "EUR",
-                                    "USD")
-                            }
-                        }
-                    }
-                }
+                binding.output2.text = convert()
             }
             override fun afterTextChanged(s: Editable?) {
                 // Optional
@@ -204,61 +124,12 @@ class HomeFragment : Fragment() {
         })
 
 
-        // New activity
+        // Save Result
         binding.save2.setOnClickListener {
             val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
 
             if (binding.input.text.toString().toDoubleOrNull() != null && binding.input.text.toString().toDoubleOrNull() != 0.0) {
-                when (firstSpinner.selectedItem.toString()) {
-                    "USD" -> {
-                        if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val resultModel = HistoryModel("USD to UAH",
-                                originalData(binding.input.text.toString().toDouble()),
-                                convertIFELSE(binding.input.text.toString().toDouble(), "USD", "UAH")
-                            )
-                            viewModel.addHistory(resultModel)
-                        }
-                        if (secondSpinner.selectedItem.toString() == "EUR") {
-                            val resultModel = HistoryModel("USD to EUR",
-                                originalData(binding.input.text.toString().toDouble()),
-                                convertIFELSE(binding.input.text.toString().toDouble(), "USD", "EUR")
-                            )
-                            viewModel.addHistory(resultModel)
-                        }
-                    }
-                    "UAH" -> {
-                        if (secondSpinner.selectedItem.toString() == "USD") {
-                            val resultModel = HistoryModel("UAH to USD",
-                                originalData(binding.input.text.toString().toDouble()),
-                                convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "USD")
-                            )
-                            viewModel.addHistory(resultModel)
-                        }
-                        if (secondSpinner.selectedItem.toString() == "EUR") {
-                            val resultModel = HistoryModel("UAH to EUR",
-                                originalData(binding.input.text.toString().toDouble()),
-                                convertIFELSE(binding.input.text.toString().toDouble(), "UAH", "EUR")
-                            )
-                            viewModel.addHistory(resultModel)
-                        }
-                    }
-                    "EUR" -> {
-                        if (secondSpinner.selectedItem.toString() == "UAH") {
-                            val resultModel = HistoryModel("EUR to UAH",
-                                originalData(binding.input.text.toString().toDouble()),
-                                convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "UAH")
-                            )
-                            viewModel.addHistory(resultModel)
-                        }
-                        if (secondSpinner.selectedItem.toString() == "USD") {
-                            val resultModel = HistoryModel("EUR to USD",
-                                originalData(binding.input.text.toString().toDouble()),
-                                convertIFELSE(binding.input.text.toString().toDouble(), "EUR", "USD"),
-                            )
-                            viewModel.addHistory(resultModel)
-                        }
-                    }
-                }
+                viewModel.addHistory(saveConvert())
             }
             else {
                 Toast.makeText(requireContext(), "Try to write something!", Toast.LENGTH_SHORT).show()
@@ -268,7 +139,7 @@ class HomeFragment : Fragment() {
 
     private fun originalData(amount: Double): String {
 
-        return String.format(Locale.getDefault(), "%.3f", amount).trimEnd('0').trimEnd('.')
+        return String.format(Locale.getDefault(), "%.2f", amount).trimEnd('0').trimEnd('.')
     }
 
     private fun convertC(amount: Double, from: String, to: String): Double {
@@ -291,6 +162,26 @@ class HomeFragment : Fragment() {
             toCurrency))
             .trimEnd('0').trimEnd('.')
     }
+    private fun convert() : String {
+        val inputValue = binding.input.text.toString().toDoubleOrNull() ?: return ""
+        val from = binding.firstCurrency2.selectedItem.toString()
+        val to = binding.secondCurrency2.selectedItem.toString()
+
+        return convertIFELSE(inputValue, from, to)
+    }
+    private fun saveConvert(): HistoryModel {
+        val inputValue = binding.input.text.toString().toDouble()
+        val from = binding.firstCurrency2.selectedItem.toString()
+        val to = binding.secondCurrency2.selectedItem.toString()
+
+        val resultModel = HistoryModel(
+            "$from to $to",
+            originalData(inputValue),
+            convertIFELSE(inputValue, from, to)
+        )
+        return resultModel
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
