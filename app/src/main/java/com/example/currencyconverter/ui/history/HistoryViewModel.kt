@@ -14,8 +14,19 @@ class HistoryViewModel : ViewModel() {
         selectedItem.value = item
     }
 
-    fun addHistory(item: HistoryModel) {
+    fun addHistory(item: HistoryModel, onDuplicate: () -> Unit) {
         val currentList = _historyList.value ?: mutableListOf()
+
+        if (currentList.any {
+            it.currencyText == item.currencyText &&
+                    it.valueText == item.valueText &&
+                    it.convertedValueText == item.convertedValueText
+            })
+        {
+            onDuplicate.invoke()
+            return
+        }
+
         currentList.add(item)
         _historyList.value = currentList
     }

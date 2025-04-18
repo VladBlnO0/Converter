@@ -41,9 +41,6 @@ class HomeFragment : Fragment() {
         viewModel.selectedItem.observe(viewLifecycleOwner) { item ->
             if (item != null) {
                 binding.input.setText(item.valueText.toString())
-                // Optionally set spinners if needed
-
-
                 viewModel.selectItem(null)
             }
         }
@@ -119,7 +116,6 @@ class HomeFragment : Fragment() {
                 binding.output2.text = convert()
             }
             override fun afterTextChanged(s: Editable?) {
-                // Optional
             }
         })
 
@@ -129,7 +125,9 @@ class HomeFragment : Fragment() {
             val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
 
             if (binding.input.text.toString().toDoubleOrNull() != null && binding.input.text.toString().toDoubleOrNull() != 0.0) {
-                viewModel.addHistory(saveConvert())
+                viewModel.addHistory(saveConvert()) {
+                    Toast.makeText(requireContext(), "Already exists!", Toast.LENGTH_SHORT).show()
+                }
             }
             else {
                 Toast.makeText(requireContext(), "Try to write something!", Toast.LENGTH_SHORT).show()

@@ -14,8 +14,6 @@ class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -31,6 +29,7 @@ class HistoryFragment : Fragment() {
 
         viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
             val adapter = HistoryAdapter(historyList)
+
             adapter.onReturnClicked = { item ->
                 viewModel.selectItem(item)
                 findNavController().navigateUp()

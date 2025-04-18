@@ -32,7 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="42dp"
         android:gravity="center"
-        android:maxLength="15"
+        android:maxLength="16"
         android:textAlignment="gravity"
         android:textColor="@color/black"
         android:textSize="34sp"
