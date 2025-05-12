@@ -10,6 +10,7 @@ import com.example.currencyconverter.R
 
 class HistoryAdapter(private val items: List<HistoryModel>) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+    var onDeleteClicked: ((HistoryModel) -> Unit)? = null
 
     var onReturnClicked: ((HistoryModel) -> Unit)? = null
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -33,6 +34,9 @@ class HistoryAdapter(private val items: List<HistoryModel>) :
 
         holder.itemView.findViewById<Button>(R.id.return_btn).setOnClickListener {
             onReturnClicked?.invoke(item)
+        }
+        holder.itemView.findViewById<Button>(R.id.delete_btn).setOnClickListener {
+            onDeleteClicked?.invoke(item)
         }
     }
 
