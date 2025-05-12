@@ -13,6 +13,14 @@ class HistoryViewModel : ViewModel() {
     fun selectItem(item: HistoryModel?) {
         selectedItem.value = item
     }
+    fun deleteItem(item: HistoryModel?) {
+        val currentList = _historyList.value
+        if (currentList != null) {
+            val updatedList = currentList.toMutableList()
+            updatedList.remove(item)
+            _historyList.value = updatedList
+        }
+    }
 
     fun addHistory(item: HistoryModel, onDuplicate: () -> Unit) {
         val currentList = _historyList.value ?: mutableListOf()

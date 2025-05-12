@@ -34,6 +34,9 @@ class HistoryFragment : Fragment() {
                 viewModel.selectItem(item)
                 findNavController().navigateUp()
             }
+            adapter.onDeleteClicked = { item ->
+                viewModel.deleteItem(item)
+            }
 
             binding.historyRecyclerView.adapter = adapter
             binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
