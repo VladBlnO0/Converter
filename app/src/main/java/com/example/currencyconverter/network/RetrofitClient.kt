@@ -9,7 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 object RetrofitClient {
 
     private const val BASE_URL =
-        "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/"
+        "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/"
 
     val apiService: RetrofitInterface by lazy {
         val logging = HttpLoggingInterceptor().apply {

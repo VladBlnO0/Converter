@@ -20,4 +20,18 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+
+    val currencyNames = MutableLiveData<Map<String, String>>()
+
+    fun loadCurrencyNames() {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.apiService.getCurrencyNames()
+                currencyNames.value = response
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

@@ -18,6 +18,8 @@ import com.example.currencyconverter.ui.history.HistoryModel
 import com.example.currencyconverter.ui.history.HistoryViewModel
 
 import com.example.currencyconverter.ui.home.CurrencyModel
+import com.example.currencyconverter.ui.home.CurrencyNamesModel
+
 import com.example.currencyconverter.ui.home.HomeViewModel
 
 import androidx.lifecycle.lifecycleScope
@@ -69,9 +71,15 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.apiService.getRates()
-                val currencyList = response.eur.keys.map { it.uppercase() }.sorted()
-                // do something with the currency list, e.g. update a Spinner
+                val response = RetrofitClient.apiService.getCurrencyNames()
+                val currencyList = response.map { (code, name) ->
+                    "${code.uppercase()} - $name"
+                }.sorted()
+
+                currencyList.forEach {
+                    println(it)
+                }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -92,18 +100,36 @@ class HomeFragment : Fragment() {
 //        firstSpinner.adapter = adapterFirst
 //        secondSpinner.adapter = adapterSecond
 
-        homeViewModel.currencyList.observe(viewLifecycleOwner) { currencyKeys ->
-            val sortedKeys = currencyKeys.map { it.uppercase() }.sorted()
+//        homeViewModel.currencyList.observe(viewLifecycleOwner) { currencyKeys ->
+//            val sortedKeys = currencyKeys.map { it.uppercase() }.sorted()
+//            val adapter = ArrayAdapter(
+//                requireContext(),
+//                android.R.layout.simple_spinner_item,
+//                sortedKeys
+//            )
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            binding.firstCurrency2.adapter = adapter
+//            binding.secondCurrency2.adapter = adapter
+//        }
+//        homeViewModel.loadRates()
+
+        homeViewModel.loadCurrencyNames()
+
+        homeViewModel.currencyNames.observe(viewLifecycleOwner) { names ->
+            val items = names.map { "${it.key.uppercase()} - ${it.value}" }.sorted()
+
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                sortedKeys
+                items
             )
+
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
             binding.firstCurrency2.adapter = adapter
             binding.secondCurrency2.adapter = adapter
         }
-        homeViewModel.loadRates()
+
 
 
 
@@ -143,7 +169,7 @@ class HomeFragment : Fragment() {
             val secondSelectedItem = secondSpinner.selectedItem.toString()
             firstSpinner.setSelection(valuesFirst.indexOf(secondSelectedItem))
             secondSpinner.setSelection(valuesSecond.indexOf(firstSelectedItem))
-            binding.output2.text = convert()
+//            binding.output2.text = convert()
         }
 
         // Converting
