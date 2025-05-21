@@ -17,6 +17,13 @@ import android.text.TextWatcher
 import com.example.currencyconverter.ui.history.HistoryModel
 import com.example.currencyconverter.ui.history.HistoryViewModel
 
+import com.example.currencyconverter.ui.home.CurrencyModel
+import com.example.currencyconverter.ui.home.HomeViewModel
+
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.example.currencyconverter.network.RetrofitClient
+
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -31,26 +38,44 @@ class HomeFragment : Fragment() {
 
     private val valuesFirst = arrayOf("USD", "UAH", "EUR")
     private val valuesSecond = arrayOf("UAH", "USD", "EUR")
+    private lateinit var historyViewModel: HistoryViewModel
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
-        viewModel.selectedItem.observe(viewLifecycleOwner) { item ->
-            if (item != null) {
-                binding.input.setText(item.valueText.toString())
-                viewModel.selectItem(null)
-            }
-        }
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        historyViewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+
+        historyViewModel.selectedItem.observe(viewLifecycleOwner) { item ->
+            if (item != null) {
+                binding.input.setText(item.valueText.toString())
+                historyViewModel.selectItem(null)
+            }
+        }
 
         setupCurrencyConverter()
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.getRates()
+                val currencyList = response.eur.keys.map { it.uppercase() }.sorted()
+                // do something with the currency list, e.g. update a Spinner
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun setupCurrencyConverter() {
@@ -58,15 +83,29 @@ class HomeFragment : Fragment() {
         val secondSpinner: Spinner = binding.secondCurrency2
 
         // First spinner getting values
-        val adapterFirst = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, valuesFirst)
-        adapterFirst.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
+//        val adapterFirst = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, valuesFirst)
+//        adapterFirst.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Second spinner getting values
-        val adapterSecond = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, valuesSecond)
-        adapterSecond.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        val adapterSecond = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, valuesSecond)
+//        adapterSecond.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        firstSpinner.adapter = adapterFirst
-        secondSpinner.adapter = adapterSecond
+//        firstSpinner.adapter = adapterFirst
+//        secondSpinner.adapter = adapterSecond
+
+        homeViewModel.currencyList.observe(viewLifecycleOwner) { currencyKeys ->
+            val sortedKeys = currencyKeys.map { it.uppercase() }.sorted()
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                sortedKeys
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.firstCurrency2.adapter = adapter
+            binding.secondCurrency2.adapter = adapter
+        }
+        homeViewModel.loadRates()
+
+
 
         // First spinner
         firstSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

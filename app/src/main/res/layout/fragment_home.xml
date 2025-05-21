@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="133dp" />
+        app:layout_constraintGuide_begin="100dp" />
 
     <TextView
         android:id="@+id/output2"
@@ -42,7 +42,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.425" />
+        app:layout_constraintVertical_bias="0.7" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
@@ -79,12 +79,25 @@
         app:fabSize="auto"
         app:flow_horizontalAlign="center"
         app:flow_verticalAlign="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.993"
         app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/firstCurrency2" />
+
+    <Spinner
+        android:id="@+id/secondCurrency2"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:isScrollContainer="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        app:layout_constraintVertical_bias="0.082" />
+        app:layout_constraintVertical_bias="0.459" />
 
     <TextView
         android:id="@+id/textView5"
@@ -94,9 +107,20 @@
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/secondCurrency2"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toEndOf="@+id/changeCurrency2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Spinner
+        android:id="@+id/firstCurrency2"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:isScrollContainer="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+        app:layout_constraintVertical_bias="0.078" />
 
     <TextView
         android:id="@+id/textView4"
@@ -105,32 +129,10 @@
         android:text="From"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/firstCurrency2"
-        app:layout_constraintEnd_toStartOf="@+id/changeCurrency2"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
         app:layout_constraintVertical_bias="1.0" />
-
-    <Spinner
-        android:id="@+id/secondCurrency2"
-        android:layout_width="115dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toEndOf="@+id/changeCurrency2"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        app:layout_constraintVertical_bias="0.09" />
-
-    <Spinner
-        android:id="@+id/firstCurrency2"
-        android:layout_width="115dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/changeCurrency2"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        app:layout_constraintVertical_bias="0.09" />
 
     <Button
         android:id="@+id/save2"
@@ -139,7 +141,8 @@
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/output2"
-        app:layout_constraintVertical_bias="0.125" />
+        app:layout_constraintVertical_bias="0.169" />
 </androidx.constraintlayout.widget.ConstraintLayout>
