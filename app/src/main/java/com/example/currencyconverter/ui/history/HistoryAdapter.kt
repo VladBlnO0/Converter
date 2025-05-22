@@ -11,7 +11,6 @@ import com.example.currencyconverter.R
 class HistoryAdapter(private val items: List<HistoryModel>) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
     var onDeleteClicked: ((HistoryModel) -> Unit)? = null
-
     var onReturnClicked: ((HistoryModel) -> Unit)? = null
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val currencyTextView: TextView = itemView.findViewById(R.id.currencyText)
@@ -28,7 +27,8 @@ class HistoryAdapter(private val items: List<HistoryModel>) :
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         val item = items[position]
-        holder.currencyTextView.text = item.currencyText
+
+        holder.currencyTextView.text = "${item.fromCurrencyCode.uppercase()} → ${item.toCurrencyCode.uppercase()}"
         holder.valueTextView.text = item.valueText
         holder.convertedValueView.text = item.convertedValueText
 

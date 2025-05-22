@@ -25,7 +25,8 @@ class HistoryViewModel : ViewModel() {
         val currentList = _historyList.value ?: mutableListOf()
 
         if (currentList.any {
-            it.currencyText == item.currencyText &&
+            it.fromCurrencyCode == item.fromCurrencyCode &&
+                    it.toCurrencyCode == item.toCurrencyCode &&
                     it.valueText == item.valueText &&
                     it.convertedValueText == item.convertedValueText
             })

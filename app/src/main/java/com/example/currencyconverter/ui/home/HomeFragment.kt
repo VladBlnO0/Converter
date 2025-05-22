@@ -35,6 +35,11 @@ class HomeFragment : Fragment() {
     private lateinit var historyViewModel: HistoryViewModel
     private lateinit var homeViewModel: HomeViewModel
     private var baseCurrency: String = "eur"
+    private var currencyItems: List<String> = emptyList()
+
+    private var restoringFromHistory = false
+
+    private val cur = false;
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,45 +49,24 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        historyViewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
         homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        historyViewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
 
-        historyViewModel.selectedItem.observe(viewLifecycleOwner) { item ->
-            if (item != null) {
-                binding.input.setText(item.valueText.toString())
-                historyViewModel.selectItem(null)
-            }
-        }
 
         setupCurrencyConverter()
 
         return root
     }
-    private var currencyRates: Map<String, Double> = emptyMap()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         Log.d("DEBUG", "onViewCreated started")
-        homeViewModel.loadRates("eur")
 
-        homeViewModel.loadCurrencyNames()
-
-        // Rates
-        homeViewModel.currencyRates.observe(viewLifecycleOwner) { rates ->
-            currencyRates = rates
-            Log.d("CurrencyRates", "Rates loaded: $rates")
-            binding.output2.text = convert()
-        }
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.apiService.getCurrencyNames()
-                val currencyList = response.map { (code, name) ->
-                    "${code.uppercase()} - $name"
-                }.sorted()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        if (!cur) {
+            homeViewModel.loadRates("eur")
+            homeViewModel.loadCurrencyNames()
+            cur
         }
     }
 
@@ -90,54 +74,61 @@ class HomeFragment : Fragment() {
         val firstSpinner: Spinner = binding.firstCurrency2
         val secondSpinner: Spinner = binding.secondCurrency2
 
-
-        // First spinner getting values
-//        val adapterFirst = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, valuesFirst)
-//        adapterFirst.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // Second spinner getting values
-//        val adapterSecond = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, valuesSecond)
-//        adapterSecond.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-//        firstSpinner.adapter = adapterFirst
-//        secondSpinner.adapter = adapterSecond
-
-
         homeViewModel.currencyNames.observe(viewLifecycleOwner) { names ->
             val items = names.map { (code, name) ->
                 if (name.isBlank() || name == code) "${code.uppercase()} - Cryptocurrency"
                 else "${code.uppercase()} - $name"
             }.sorted()
 
+            currencyItems = items
+
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
                 items
             )
-
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            binding.firstCurrency2.adapter = adapter
-            binding.secondCurrency2.adapter = adapter
+            val lastFrom = homeViewModel.selectedFromCurrency.value ?: "USD"
+            val lastTo = homeViewModel.selectedToCurrency.value ?: "UAH"
 
-            binding.firstCurrency2.setSelection(items.indexOfFirst { it.startsWith("USD") })
-            binding.secondCurrency2.setSelection(items.indexOfFirst { it.startsWith("UAH") })
+            firstSpinner.adapter = adapter
+            secondSpinner.adapter = adapter
+
+//            if (isFirstLaunch) {
+//                binding.firstCurrency2.setSelection(currencyItems.indexOfFirst { it.startsWith("USD") })
+//                binding.secondCurrency2.setSelection(currencyItems.indexOfFirst { it.startsWith("UAH") })
+//                isFirstLaunch = false
+//            }
+
+
+            val fromIndex = currencyItems.indexOfFirst { it.substringBefore(" -") == lastFrom }
+            val toIndex = currencyItems.indexOfFirst { it.substringBefore(" -") == lastTo }
+            if (fromIndex >= 0) firstSpinner.setSelection(fromIndex)
+            if (toIndex >= 0) secondSpinner.setSelection(toIndex)
+
+
+
+
+//
+//            if (!restoringFromHistory && currencyItems.isNotEmpty() && firstSpinner.selectedItem == null) {
+//                firstSpinner.setSelection(currencyItems.indexOfFirst { it.startsWith("USD") })
+//                secondSpinner.setSelection(currencyItems.indexOfFirst { it.startsWith("UAH") })
+//            }
+
 
             // First spinner
             firstSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    val secondSelectedItem = secondSpinner.selectedItem.toString()
+                    if (restoringFromHistory) {
 
-                    val selectedItem = parent.getItemAtPosition(position).toString()
+                        val currencyCode = currencyItems[position].substringBefore(" -")
+                        homeViewModel.selectedFromCurrency.value = currencyCode
 
-                    if (selectedItem == secondSelectedItem) {
-                        Toast.makeText(requireContext(), "Select another currency", Toast.LENGTH_SHORT).show()
-                        binding.firstCurrency2.setSelection(items.indexOfFirst { it.startsWith("USD") })
-                        binding.secondCurrency2.setSelection(items.indexOfFirst { it.startsWith("UAH") })
+                        binding.output2.text = convert()
+
+                        return
                     }
-                    val fromCurrencyCode = selectedItem.substringBefore(" -").lowercase()
-
-                    homeViewModel.loadRates(fromCurrencyCode)
-
                     binding.output2.text = convert()
                 }
                 override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -146,14 +137,15 @@ class HomeFragment : Fragment() {
             // Second spinner
             secondSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    val firstSelectedItem = firstSpinner.selectedItem.toString()
-                    val selectedItem = parent.getItemAtPosition(position).toString()
-                    if (selectedItem == firstSelectedItem) {
-                        Toast.makeText(requireContext(), "Select another currency", Toast.LENGTH_SHORT).show()
-                        binding.firstCurrency2.setSelection(items.indexOfFirst { it.startsWith("USD") })
-                        binding.secondCurrency2.setSelection(items.indexOfFirst { it.startsWith("UAH") })
-                    }
+                    if (restoringFromHistory) {
 
+                        val currencyCode = currencyItems[position].substringBefore(" -")
+                        homeViewModel.selectedToCurrency.value = currencyCode
+
+                        binding.output2.text = convert()
+
+                        return
+                    }
                     binding.output2.text = convert()
                 }
                 override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -167,8 +159,10 @@ class HomeFragment : Fragment() {
                 val newFirst = items.indexOfFirst { it.startsWith(secondSelectedItem.substringBefore(" -")) }
                 val newSecond = items.indexOfFirst { it.startsWith(firstSelectedItem.substringBefore(" -")) }
 
-                firstSpinner.setSelection(newFirst)
-                secondSpinner.setSelection(newSecond)
+                if (newFirst >= 0 && newSecond >= 0) {
+                    firstSpinner.setSelection(newFirst)
+                    secondSpinner.setSelection(newSecond)
+                }
 
                 binding.output2.text = convert()
             }
@@ -180,7 +174,9 @@ class HomeFragment : Fragment() {
                 binding.output2.text = String.format(Locale.getDefault(), "Input your sum")
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.output2.text = convert()
+                if (binding.firstCurrency2.selectedItem != null && binding.secondCurrency2.selectedItem != null) {
+                    binding.output2.text = convert()
+                }
             }
             override fun afterTextChanged(s: Editable?) {
             }
@@ -189,10 +185,8 @@ class HomeFragment : Fragment() {
 
         // Save Result
         binding.save2.setOnClickListener {
-            val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
-
             if (binding.input.text.toString().toDoubleOrNull() != null && binding.input.text.toString().toDoubleOrNull() != 0.0) {
-                viewModel.addHistory(saveConvert()) {
+                historyViewModel.addHistory(saveConvert()) {
                     Toast.makeText(requireContext(), "Already exists!", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -208,10 +202,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun convertC(amount: Double, from: String, to: String): Double {
+        val rates = homeViewModel.currencyRates.value ?: return 1.0
+
         if (from == to) return amount
 
-        val fromRate = if (from == "eur") 1.0 else currencyRates[from]
-        val toRate = if (to == "eur") 1.0 else currencyRates[to]
+        val fromRate = if (from == "eur") 1.0 else rates[from]
+        val toRate = if (to == "eur") 1.0 else rates[to]
 
         if (fromRate == null || toRate == null) {
             throw IllegalArgumentException("Missing rate for $from or $to")
@@ -234,32 +230,35 @@ class HomeFragment : Fragment() {
             .trimEnd('0').trimEnd('.')
     }
     private fun convert() : String {
+        val rates = homeViewModel.currencyRates.value
+
         val inputValue = binding.input.text.toString().toDoubleOrNull() ?: return ""
 
-        val from = binding.firstCurrency2.selectedItem.toString().substringBefore(" -").lowercase()
-        val to = binding.secondCurrency2.selectedItem.toString().substringBefore(" -").lowercase()
+        val fromRaw = binding.firstCurrency2.selectedItem
+        val toRaw = binding.secondCurrency2.selectedItem
+
+        val from = fromRaw.toString().substringBefore(" -").lowercase()
+        val to = toRaw.toString().substringBefore(" -").lowercase()
 
         Log.d("Convert", "base=$baseCurrency, from=$from, to=$to")
 
-        if (currencyRates.isEmpty()) return "Loading rates..."
+//        if (rates.isEmpty()) return "Loading rates..."
 
         return convertIFELSE(inputValue, from, to)
     }
     private fun saveConvert(): HistoryModel {
         val inputValue = binding.input.text.toString().toDouble()
-        val from = binding.firstCurrency2.selectedItem.toString()
-        val to = binding.secondCurrency2.selectedItem.toString()
-
 
         val fromText = binding.firstCurrency2.selectedItem.toString().substringBefore(" -")
         val toText = binding.secondCurrency2.selectedItem.toString().substringBefore(" -")
 
-
         val resultModel = HistoryModel(
-            "$fromText to $toText",
-            originalData(inputValue),
-            convertIFELSE(inputValue, from.substringBefore(" -").lowercase(), to.substringBefore(" -").lowercase())
+            fromCurrencyCode = fromText,
+            toCurrencyCode = toText,
+            valueText = originalData(inputValue),
+            convertedValueText = convertIFELSE(inputValue, fromText.lowercase(), toText.lowercase())
         )
+
         return resultModel
     }
 

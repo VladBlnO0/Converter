@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-import com.example.currencyconverter.ui.home.CurrencyModel
-import com.example.currencyconverter.ui.home.CurrencyNamesModel
-
 class HomeViewModel : ViewModel() {
     val currencyRates = MutableLiveData<Map<String, Double>>()
+    val currencyNames = MutableLiveData<Map<String, String>>()
+    val selectedFromCurrency = MutableLiveData<String>("USD")
+    val selectedToCurrency = MutableLiveData<String>("UAH")
 
     fun loadRates(base: String = "eur") {
+        if (currencyRates.value != null && currencyRates.value!!.isNotEmpty()) return
+
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.getRates(base)
@@ -24,9 +26,10 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    val currencyNames = MutableLiveData<Map<String, String>>()
 
     fun loadCurrencyNames() {
+        if (currencyNames.value != null && currencyNames.value!!.isNotEmpty()) return
+
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.getCurrencyNames()
