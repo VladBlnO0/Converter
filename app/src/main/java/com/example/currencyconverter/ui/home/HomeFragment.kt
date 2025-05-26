@@ -24,10 +24,13 @@ import com.example.currencyconverter.ui.home.CurrencyNamesModel
 import com.example.currencyconverter.ui.home.HomeViewModel
 
 import androidx.lifecycle.lifecycleScope
+import com.example.currencyconverter.db.HistoryEntity
 import kotlinx.coroutines.launch
 import com.example.currencyconverter.network.RetrofitClient
+import com.example.currencyconverter.ui.history.HistoryDbViewModel
 
 class HomeFragment : Fragment() {
+    private lateinit var dbViewModel: HistoryDbViewModel
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -38,6 +41,8 @@ class HomeFragment : Fragment() {
     private var currencyItems: List<String> = emptyList()
 
     private var restoringFromHistory = false
+    private var pendingRestore: HistoryModel? = null
+
 
     private val cur = false;
 
@@ -51,7 +56,9 @@ class HomeFragment : Fragment() {
 
         homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
         historyViewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
-
+        historyViewModel.selectedItem.observe(viewLifecycleOwner) { item ->
+            pendingRestore = item
+        }
 
         setupCurrencyConverter()
 
@@ -67,6 +74,21 @@ class HomeFragment : Fragment() {
             homeViewModel.loadRates("eur")
             homeViewModel.loadCurrencyNames()
             cur
+        }
+
+        dbViewModel = ViewModelProvider(
+            requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        ).get(HistoryDbViewModel::class.java)
+
+        dbViewModel.allHistory.observe(viewLifecycleOwner) { list ->
+            val newHistory = HistoryEntity(
+                fromCurrency = "USD",
+                toCurrency = "UAH",
+                inputValue = "100",
+                resultValue = "4300"
+            )
+            dbViewModel.insert(newHistory)
         }
     }
 
@@ -107,7 +129,10 @@ class HomeFragment : Fragment() {
             if (fromIndex >= 0) firstSpinner.setSelection(fromIndex)
             if (toIndex >= 0) secondSpinner.setSelection(toIndex)
 
+            pendingRestore?.let { binding.input.setText(it.valueText) }
+            pendingRestore = null
 
+            historyViewModel.selectItem(null)
 
 
 //
@@ -230,8 +255,6 @@ class HomeFragment : Fragment() {
             .trimEnd('0').trimEnd('.')
     }
     private fun convert() : String {
-        val rates = homeViewModel.currencyRates.value
-
         val inputValue = binding.input.text.toString().toDoubleOrNull() ?: return ""
 
         val fromRaw = binding.firstCurrency2.selectedItem
