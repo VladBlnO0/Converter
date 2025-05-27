@@ -7,11 +7,11 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyconverter.R
+import com.example.currencyconverter.db.HistoryEntity
 
-class HistoryAdapter(private val items: List<HistoryModel>) :
+class HistoryAdapter(var items: List<HistoryEntity>) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
-    var onDeleteClicked: ((HistoryModel) -> Unit)? = null
-    var onReturnClicked: ((HistoryModel) -> Unit)? = null
+    var onDeleteClicked: ((HistoryEntity) -> Unit)? = null
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val currencyTextView: TextView = itemView.findViewById(R.id.currencyText)
         val valueTextView: TextView = itemView.findViewById(R.id.valueText)
@@ -28,18 +28,14 @@ class HistoryAdapter(private val items: List<HistoryModel>) :
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         val item = items[position]
 
-        holder.currencyTextView.text = "${item.fromCurrencyCode.uppercase()} → ${item.toCurrencyCode.uppercase()}"
-        holder.valueTextView.text = item.valueText
-        holder.convertedValueView.text = item.convertedValueText
+        holder.currencyTextView.text = "${item.fromCurrency.uppercase()} > ${item.toCurrency.uppercase()}"
+        holder.valueTextView.text = item.inputValue
+        holder.convertedValueView.text = item.resultValue
 
-        holder.itemView.findViewById<Button>(R.id.return_btn).setOnClickListener {
-            onReturnClicked?.invoke(item)
-        }
         holder.itemView.findViewById<Button>(R.id.delete_btn).setOnClickListener {
             onDeleteClicked?.invoke(item)
         }
     }
-
     override fun getItemCount(): Int = items.size
 }
 

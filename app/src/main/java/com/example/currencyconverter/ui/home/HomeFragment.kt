@@ -82,13 +82,6 @@ class HomeFragment : Fragment() {
         ).get(HistoryDbViewModel::class.java)
 
         dbViewModel.allHistory.observe(viewLifecycleOwner) { list ->
-            val newHistory = HistoryEntity(
-                fromCurrency = "USD",
-                toCurrency = "UAH",
-                inputValue = "100",
-                resultValue = "4300"
-            )
-            dbViewModel.insert(newHistory)
         }
     }
 
@@ -211,9 +204,13 @@ class HomeFragment : Fragment() {
         // Save Result
         binding.save2.setOnClickListener {
             if (binding.input.text.toString().toDoubleOrNull() != null && binding.input.text.toString().toDoubleOrNull() != 0.0) {
-                historyViewModel.addHistory(saveConvert()) {
-                    Toast.makeText(requireContext(), "Already exists!", Toast.LENGTH_SHORT).show()
-                }
+                val entity = saveConvert()
+                dbViewModel.insert(entity)
+                Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+
+//                historyViewModel.addHistory(saveConvert()) {
+//                    Toast.makeText(requireContext(), "Already exists!", Toast.LENGTH_SHORT).show()
+//                }
             }
             else {
                 Toast.makeText(requireContext(), "Try to write something!", Toast.LENGTH_SHORT).show()
@@ -269,20 +266,20 @@ class HomeFragment : Fragment() {
 
         return convertIFELSE(inputValue, from, to)
     }
-    private fun saveConvert(): HistoryModel {
+    private fun saveConvert(): HistoryEntity {
         val inputValue = binding.input.text.toString().toDouble()
 
         val fromText = binding.firstCurrency2.selectedItem.toString().substringBefore(" -")
         val toText = binding.secondCurrency2.selectedItem.toString().substringBefore(" -")
 
-        val resultModel = HistoryModel(
-            fromCurrencyCode = fromText,
-            toCurrencyCode = toText,
-            valueText = originalData(inputValue),
-            convertedValueText = convertIFELSE(inputValue, fromText.lowercase(), toText.lowercase())
+        val resultEntity = HistoryEntity(
+            fromCurrency = fromText,
+            toCurrency = toText,
+            inputValue = originalData(inputValue),
+            resultValue = convertIFELSE(inputValue, fromText.lowercase(), toText.lowercase())
         )
 
-        return resultModel
+        return resultEntity
     }
 
 

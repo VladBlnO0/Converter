@@ -25,7 +25,4 @@ class HistoryDbViewModel(application: Application) : AndroidViewModel(applicatio
         repository.delete(history)
     }
 
-    fun deleteAll() = viewModelScope.launch {
-        repository.deleteAll()
-    }
 }

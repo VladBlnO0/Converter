@@ -5,5 +5,4 @@ class HistoryRepository(private val dao: HistoryDao) {
 
     suspend fun insert(history: HistoryEntity) = dao.insert(history)
     suspend fun delete(history: HistoryEntity) = dao.delete(history)
-    suspend fun deleteAll() = dao.deleteAll()
 }

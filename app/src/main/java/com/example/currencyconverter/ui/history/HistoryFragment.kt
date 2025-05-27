@@ -13,6 +13,7 @@ import com.example.currencyconverter.databinding.FragmentHistBinding
 class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistBinding? = null
+    private lateinit var dbViewModel: HistoryDbViewModel
 
     private val binding get() = _binding!!
 
@@ -25,21 +26,22 @@ class HistoryFragment : Fragment() {
         _binding = FragmentHistBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val viewModel = ViewModelProvider(requireActivity())[HistoryViewModel::class.java]
+        dbViewModel = ViewModelProvider(
+            requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        ).get(HistoryDbViewModel::class.java)
 
-        viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
-            val adapter = HistoryAdapter(historyList)
+        val adapter = HistoryAdapter(emptyList())
+        binding.historyRecyclerView.adapter = adapter
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter.onReturnClicked = { item ->
-                viewModel.selectItem(item)
-                findNavController().navigateUp()
-            }
-            adapter.onDeleteClicked = { item ->
-                viewModel.deleteItem(item)
-            }
+        adapter.onDeleteClicked = { item ->
+            dbViewModel.delete(item)
+        }
 
-            binding.historyRecyclerView.adapter = adapter
-            binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        dbViewModel.allHistory.observe(viewLifecycleOwner) { historyList ->
+            adapter.items = historyList
+            adapter.notifyDataSetChanged()
         }
 
 
