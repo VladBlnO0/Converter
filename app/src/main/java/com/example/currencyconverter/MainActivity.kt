@@ -12,13 +12,24 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.currencyconverter.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 
+import androidx.appcompat.app.AppCompatDelegate
+import android.content.Context
+import android.view.MenuItem
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        when (prefs.getString("theme", "system")) {
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -41,6 +52,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+                val current = prefs.getString("theme", "system")
+
+                val newTheme = when (current) {
+                    "dark" -> "light"
+                    "light" -> "dark"
+                    else -> "dark"
+                }
+
+                prefs.edit().putString("theme", newTheme).apply()
+
+                when (newTheme) {
+                    "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

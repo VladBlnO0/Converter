@@ -18,15 +18,7 @@ import android.util.Log
 import com.example.currencyconverter.ui.history.HistoryModel
 import com.example.currencyconverter.ui.history.HistoryViewModel
 
-import com.example.currencyconverter.ui.home.CurrencyModel
-import com.example.currencyconverter.ui.home.CurrencyNamesModel
-
-import com.example.currencyconverter.ui.home.HomeViewModel
-
-import androidx.lifecycle.lifecycleScope
 import com.example.currencyconverter.db.HistoryEntity
-import kotlinx.coroutines.launch
-import com.example.currencyconverter.network.RetrofitClient
 import com.example.currencyconverter.ui.history.HistoryDbViewModel
 
 class HomeFragment : Fragment() {
@@ -45,6 +37,7 @@ class HomeFragment : Fragment() {
 
 
     private val cur = false;
+
 
     override fun onCreateView(
         inflater: LayoutInflater,

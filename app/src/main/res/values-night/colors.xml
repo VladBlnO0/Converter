@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorOnSecondary">@color/white</color>
+
+2
+    <color name="faq_text">#FFFFFF</color>
+    <color name="home_text">#FFFFFF</color>
+
+    <color name="app_background">#181C22</color>
+
+    <color name="popup_bg">#2A2A2A</color>
+    <color name="popup_text">#FFFFFF</color>
+
+</resources>

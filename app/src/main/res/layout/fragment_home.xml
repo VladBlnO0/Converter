@@ -34,7 +34,7 @@
         android:gravity="center"
         android:maxLength="16"
         android:textAlignment="gravity"
-        android:textColor="@color/black"
+        android:textColor="@color/home_text"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,13 +58,11 @@
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#DEE6DE"
             android:hint="Input your sum"
             android:inputType="number|numberDecimal"
             android:maxEms="10"
             android:maxLength="10"
-            android:singleLine="true"
-            android:textColorHint="#8BC34A" />
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
