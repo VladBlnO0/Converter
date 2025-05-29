@@ -198,12 +198,13 @@ class HomeFragment : Fragment() {
         binding.save2.setOnClickListener {
             if (binding.input.text.toString().toDoubleOrNull() != null && binding.input.text.toString().toDoubleOrNull() != 0.0) {
                 val entity = saveConvert()
-                dbViewModel.insert(entity)
-                Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
-
-//                historyViewModel.addHistory(saveConvert()) {
-//                    Toast.makeText(requireContext(), "Already exists!", Toast.LENGTH_SHORT).show()
-//                }
+                dbViewModel.saveIfNotExists(entity) { saved ->
+                    if (saved) {
+                        Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Already exists!", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
             else {
                 Toast.makeText(requireContext(), "Try to write something!", Toast.LENGTH_SHORT).show()
@@ -255,7 +256,7 @@ class HomeFragment : Fragment() {
 
         Log.d("Convert", "base=$baseCurrency, from=$from, to=$to")
 
-//        if (rates.isEmpty()) return "Loading rates..."
+//        if (rates.isEmpty()) return "Loading..."
 
         return convertIFELSE(inputValue, from, to)
     }

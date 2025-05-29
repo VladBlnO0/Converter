@@ -38,4 +38,5 @@ class HistoryViewModel : ViewModel() {
         currentList.add(item)
         _historyList.value = currentList
     }
+
 }

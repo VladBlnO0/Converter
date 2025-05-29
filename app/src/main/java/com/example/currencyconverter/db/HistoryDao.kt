@@ -14,6 +14,7 @@ interface HistoryDao {
     @Delete
     suspend fun delete(history: HistoryEntity)
 
-    @Query("DELETE FROM history_table")
-    suspend fun deleteAll()
+    @Query("SELECT COUNT(*) FROM history_table WHERE fromCurrency = :from AND toCurrency = :to AND inputValue = :input AND resultValue = :result")
+    suspend fun exists(from: String, to: String, input: String, result: String): Int
+
 }

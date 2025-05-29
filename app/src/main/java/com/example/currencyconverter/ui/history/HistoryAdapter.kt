@@ -28,7 +28,7 @@ class HistoryAdapter(var items: List<HistoryEntity>) :
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         val item = items[position]
 
-        holder.currencyTextView.text = "${item.fromCurrency.uppercase()} > ${item.toCurrency.uppercase()}"
+        holder.currencyTextView.text = "${item.fromCurrency.uppercase()} - ${item.toCurrency.uppercase()}"
         holder.valueTextView.text = item.inputValue
         holder.convertedValueView.text = item.resultValue
 
